@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-
-
 const VendorUserSchema = mongoose.Schema({
   username: {
     type: String,

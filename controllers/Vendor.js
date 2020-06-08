@@ -1,140 +1,114 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const {
-  validationResult
-} = require("express-validator");
-const UserModel = require("../models/VendorUser");
-const VendorserviceModel = require("../models/Vendorservice");
-exports.signup = async (req, res) => {
+const { validationResult } = require("express-validator");
+const ServiceModel = require("../models/service");
+const UserModel = require("../models/user");
+
+// Create a service
+exports.service = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
-      errors: errors.array()
+      errors: errors.array(),
     });
   }
 
   const {
-    username,
-    email,
-    password
-  } = req.body;
+    body: { title, description, imageUrl, price },
+    user: { id },
+  } = req;
+  // const { title, description, imageUrl, price } = req.body;
   try {
-    let user = await UserModel.findOne({
-      email
+    let service = await ServiceModel.findOne({
+      title,
+      userId: id
     });
-    if (user) {
-      return res.status(400).json({
-        msg: "User Already Exists"
+    if (service) {
+      return res.status(422).json({
+        msg: "You can't enlist a service more than once",
       });
     }
 
-    user = new UserModel({
-      username,
-      email,
-      password
+    service = new ServiceModel({
+      title,
+      description,
+      imageUrl,
+      price, 
+      userId: id
     });
 
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
 
-    await user.save();
-
-    const payload = {
-      user: {
-        id: user._id
-      }
-    };
-
-    jwt.sign(
-      payload,
-      "randomString", {
-        expiresIn: 10000
-      },
-      (err, token) => {
-        if (err) throw err;
-        res.status(200).json({
-          token
-        });
-      }
-    );
+    await service.save();
+    res.status(201).json({
+       service,
+     });
+    
   } catch (err) {
     console.log(err.message);
-    res.status(500).send("Error in Saving");
+    res.status(500).send("Error in Saving Service");
   }
-}
+};
 
-exports.login = async (req, res, next) => {
-  const {
-    email,
-    password
-  } = req.body;
+// Get all services
+exports.getService = async (req, res) => {
   try {
-    let user = await UserModel.findOne({
-      email
-    });
-    if (user) {
-      //console.log(user);
-      bcrypt.compare(password, user.password).then(
-        (valid) => {
-          if (!valid) {
-            return res.status(401).json({
-              error: new Error('Email or password is incorrect!')
-            });
-          }
-          const payload = {
-            user: {
-              id: user._id
-            }
-          };
-          jwt.sign(
-            payload,
-            "randomString", {
-              expiresIn: 10000
-            },
-            (err, token) => {
-              if (err) throw err;
-              res.status(200).json({
-                userId: user._id,
-                token
-              });
-            }
-          );
-        }
-      ).catch(
-        (error) => {
-          res.status(500).json({
-            error: error
-          });
-        }
-      );
-    } else if (!user) {
-      return res.status(401).json({
-        error: new Error('Email or password is incorrect')
+    let service = await ServiceModel.find();
+    if (service) {
+      return res.status(200).json({
+        service,
       });
     }
   } catch (err) {
     console.log(err.message);
-    res.status(500).send("Error in siging in");
+    res.status(500).send("Error fetching service");
   }
-}
+};
 
-exports.vendorservices= async (req, res, next) => {
-try{
-  let vendorservices = await VendorserviceModel.find({});
- if (vendorservices) {
-  res.status(200).json({
-    vendorservices
-  });
- } else {
-  res.status(404).json({
-    msg:"not found"
-  });
- }
-} catch (err) {
-  console.log(err.message);
-  res.status(500).send("Error in getting vendor services");
-}
+// Get all vendors
+exports.getVendors = async (req, res) => {
+  try {
+    let vendors = await UserModel.find().where({
+      role: "vendor",
+    });
+    // console.log(vendors);
+    if (vendors) {
+      return res.status(200).json({
+        vendors,
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error fetching Vendors");
+  }
+};
 
-}
+// Get vendor by Id
+exports.getVendorsById = async (req, res) => {
+  try {
+    let id = req.params.id;
+    console.log(id)
+    let vendor = await UserModel.findById(id);
+    if (vendor) {
+      return res.status(200).json({
+        vendor,
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error fetching Vendors");
+  }
+};
 
-//module.exports = signup;
+exports.getServiceById = async (req, res) => {
+  try {
+    let id = req.params.id;
+    // console.log(id);
+    let service = await ServiceModel.findById(id);
+    if (service) {
+      return res.status(200).json({
+        service,
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error fetching service");
+  }
+};
