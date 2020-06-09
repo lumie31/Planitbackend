@@ -15,6 +15,7 @@ exports.service = async (req, res) => {
     body: { title, description, imageUrl, price },
     user: { id },
   } = req;
+  console.log(req.user)
   // const { title, description, imageUrl, price } = req.body;
   try {
     let service = await ServiceModel.findOne({
