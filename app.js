@@ -1,8 +1,6 @@
 //mongodb+srv://Dami_user1:<password>@cluster0-teywi.mongodb.net/test?retryWrites=true&w=majority
 
 const express = require('express');
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" }).single("uploaded_file");
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const user = require('./routes/user')
@@ -40,13 +38,13 @@ app.post("/image", function (req, res) {
   });
 });
 
-app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api', user);
 app.use('/api', booking);
-app.use('/api', vendor);
-
+app.use('/api/vendors', vendor);
 
 
 app.get('/', async(req, res)=>{

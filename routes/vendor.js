@@ -1,4 +1,19 @@
 const express = require("express");
+const multer = require("multer");
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, file.originalname + "-" + uniqueSuffix);
+  },
+});
+
+var upload = multer({ storage: storage });
+
+
 const { check } = require("express-validator");
 const router = express.Router();
 const {
@@ -21,16 +36,7 @@ const {
  * @description - Create Service
  */
 
-router.post(
-  "/createService", verifyUser, verifyVendor,
-  [
-    check("title", "Title cannot be empty").not().isEmpty(),
-    check("description", "Description cannot be empty").not().isEmpty(),
-    check("imageUrl", "Image is required").not().isEmpty(),
-    check("price", "Price is required").not().isEmpty(),
-  ],
-  service
-);
+router.post("/createService", upload.single('display_image'), verifyUser, verifyVendor, service);
 
 /**
  * @method - GET
