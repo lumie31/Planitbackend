@@ -49,3 +49,24 @@ exports.booking = async (req, res) => {
     res.status(500).send("Error in booking vendor");
   }
 };
+
+// Accept a booking
+exports.acceptBooking = async (req, res) => {
+  try {
+    let id = req.params.id;
+    // console.log(id);
+    let booking = await BookingModel.findById(id);
+    if (booking) {
+      return res.status(200).json({
+        booking,
+      });
+    } else {
+      return res.status(404).json({
+        msg: "Booking does not exist"
+      })
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error fetching your Bookings");
+  }
+}
