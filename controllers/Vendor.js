@@ -2,6 +2,8 @@ const { validationResult } = require("express-validator");
 const ServiceModel = require("../models/service");
 const UserModel = require("../models/user");
 
+
+
 // Create a service
 exports.service = async (req, res) => {
   const errors = validationResult(req);
@@ -14,6 +16,7 @@ exports.service = async (req, res) => {
   const {
     body: { title, description, imageUrl, price },
     user: { id },
+    file
   } = req;
   console.log(req.user)
   // const { title, description, imageUrl, price } = req.body;
@@ -47,7 +50,6 @@ exports.service = async (req, res) => {
     res.status(500).send("Error in Saving Service");
   }
 };
-
 // Get all services
 exports.getService = async (req, res) => {
   try {
@@ -85,7 +87,7 @@ exports.getVendors = async (req, res) => {
 exports.getVendorsById = async (req, res) => {
   try {
     let id = req.params.id;
-    console.log(id)
+    // console.log(id)
     let vendor = await UserModel.findById(id);
     if (vendor) {
       return res.status(200).json({

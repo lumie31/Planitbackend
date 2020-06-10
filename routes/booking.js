@@ -2,7 +2,7 @@ const express = require("express");
 const { check } = require("express-validator");
 const router = express.Router();
 const {
- booking
+ booking, acceptBooking
 } = require("../controllers/booking");
 const {
   verifyAdmin,
@@ -27,6 +27,16 @@ router.post(
     check("dateNeeded", "dateNeeded is required").not().isEmpty(),
   ],
   booking
+);
+
+/**
+ * @method - GET
+ * @param - /GetBookedService
+ * @description - Accept a booking
+ */
+
+router.get(
+  "/acceptBooking", verifyUser, acceptBooking
 );
 
 module.exports = router;

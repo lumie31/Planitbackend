@@ -18,12 +18,12 @@ mongoose.connect('mongodb+srv://Dami_user1:La6xrkFYtO6EFesA@cluster0-teywi.mongo
     console.error(error);
   });
 
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api', user);
 app.use('/api', booking);
-app.use('/api', vendor);
+app.use('/api/vendors', vendor);
 
 
 app.get('/', async(req, res)=>{
