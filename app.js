@@ -18,27 +18,6 @@ mongoose.connect('mongodb+srv://Dami_user1:La6xrkFYtO6EFesA@cluster0-teywi.mongo
     console.error(error);
   });
 
-app.post("/image", function (req, res) {
-  upload(req, res, function (err) {
-    if (err instanceof multer.MulterError) {
-      // A Multer error occurred when uploading.
-      res.status(400).json({
-        error: "Multer error ocurred here",
-      });
-    } else if (err) {
-      // An unknown error occurred when uploading.
-      res.status(500).json({
-        error: "Something unusual went wrong",
-      });
-    }
-    // req.file is the name of your file in the form above, here 'uploaded_file'
-    // req.body will hold the text fields, if there were any
-    console.log(req.file, req.body);
-    return true
-  });
-});
-
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
