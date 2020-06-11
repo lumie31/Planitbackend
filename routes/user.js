@@ -33,7 +33,11 @@ router.post(
 router.post(
   "/vendorSignup",
   [
+    check("companyName", "Please Enter a Valid name").not().isEmpty(),
+    check("name", "Please Enter a Valid name").not().isEmpty(),
+    check("phonenumber", "Please Enter a Valid phonenumber").not().isEmpty(),
     check("username", "Please Enter a Valid Username").not().isEmpty(),
+    check("email", "Email cannot be empty").not().isEmpty(),
     check("email", "Please enter a valid email").isEmail(),
     check("password", "Please enter a valid password").isLength({
       min: 6,
@@ -52,7 +56,7 @@ router.post(
 router.post(
   "/login",
   [
-    check("email", "Please Enter a Valid email").not().isEmpty(),
+    check("email", "Email cannot be empty").not().isEmpty(),
     check("email", "Please enter a valid email").isEmail(),
     check("password", "Please enter a valid password").isLength({
       min: 6,
