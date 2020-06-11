@@ -24,6 +24,7 @@ exports.signup = async (req, res) => {
     }
 
     user = new UserModel({
+      name,
       username,
       email,
       password,
@@ -84,6 +85,8 @@ exports.vendorSignup = async (req, res) => {
     }
 
     user = new UserModel({
+      companyName,
+      name,
       username,
       email,
       password,
