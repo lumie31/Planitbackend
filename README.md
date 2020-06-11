@@ -13,4 +13,4 @@ Here are some of the technologies used to achieve this:
 - Express validator
 
 ## CONTRIBUTE
-To contribute to this repository, simple `fork` and `clone` the repository, the `npm install` the dependencies and you're good to go.
+To contribute to this repository, simple `fork` and `clone` the repository, then run `npm install` to install the project dependencies and you're good to go.
