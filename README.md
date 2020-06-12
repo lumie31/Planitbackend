@@ -5,6 +5,12 @@ PlanIt is an event planning application that helps users find vendors for their 
 Manual is boring, Automatic rocks! PlanIt seeks to remove the manual element in seeking for vendors for your events and moves everything totally online
 
 ## HOW?
+- You need a vendor for your event
+- You visit our application that has a list of verified vendors 
+- You check out the price that works for you
+- You book a vendor
+
+## TOOLS
 Here are some of the technologies used to achieve this: 
 - Express
 - Bcrypt
