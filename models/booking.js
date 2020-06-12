@@ -22,6 +22,10 @@ const BookingSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  vendorId: {
+    type: String,
+    required: true,
+  },
   accepted: {
     type: Boolean,
     default: false

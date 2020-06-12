@@ -24,6 +24,7 @@ exports.signup = async (req, res) => {
     }
 
     user = new UserModel({
+      name,
       username,
       email,
       password,
@@ -72,18 +73,25 @@ exports.vendorSignup = async (req, res) => {
     });
   }
 
-  const { username, email, password, services } = req.body;
+  const { username, email, password, services, companyName, name, phonenumber, address} = req.body;
   try {
-    let user = await UserModel.findOne({
+    let checkemail = await UserModel.findOne({
       email,
     });
-    if (user) {
+    let checkusername = await UserModel.findOne({
+      username,
+    });
+    if (checkemail || checkusername) {
       return res.status(400).json({
         msg: "Vendor Already Exists",
       });
     }
 
     user = new UserModel({
+      address,
+      companyName,
+      phonenumber,
+      name,
       username,
       email,
       password,
