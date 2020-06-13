@@ -12,7 +12,7 @@ exports.signup = async (req, res) => {
     });
   }
 
-  const { username, email, password } = req.body;
+  const { username, email, password, name, address, gender, phonenumber } = req.body;
   try {
     let user = await UserModel.findOne({
       email,
@@ -25,6 +25,9 @@ exports.signup = async (req, res) => {
 
     user = new UserModel({
       name,
+      address,
+      gender,
+      phonenumber,
       username,
       email,
       password,

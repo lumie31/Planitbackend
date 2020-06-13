@@ -15,6 +15,10 @@ const {verifyAdmin, verifyUser, verifyVendor} = require('../middlewares/verifyus
 router.post(
   "/signup",
   [
+    check("name", "Please Enter a Valid name").not().isEmpty(),
+    check("phonenumber", "Please Enter a Valid phonenumber").not().isEmpty(),
+    check("gender", "Please pick a Valid gender").not().isEmpty(),
+    check("address", "Please Enter a Valid address").not().isEmpty(),
     check("username", "Please Enter a Valid Username").not().isEmpty(),
     check("email", "Please enter a valid email").isEmail(),
     check("password", "Please enter a valid password").isLength({
