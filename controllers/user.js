@@ -73,7 +73,7 @@ exports.vendorSignup = async (req, res) => {
     });
   }
 
-  const { username, email, password, services, companyName, name, phonenumber, address} = req.body;
+  const { username, email, password, services, companyName, name, phonenumber, address, gender} = req.body;
   try {
     let checkemail = await UserModel.findOne({
       email,
@@ -96,6 +96,7 @@ exports.vendorSignup = async (req, res) => {
       email,
       password,
       services,
+      gender,
       role: "vendor",
     });
 
@@ -202,3 +203,20 @@ exports.getUsers = async (req, res) => {
     res.status(500).send("Error fetching users");
   }
 };
+
+exports.getMyInfo = async(req, res) => {
+  try {
+    let id = await req.params.id;
+    let user = await UserModel.findOne({
+      _id: await id,
+    });
+    if (user) {
+      return res.status(200).json({
+        user,
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error fetching user infp");
+  }
+}

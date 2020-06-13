@@ -37,6 +37,9 @@ const UserSchema = mongoose.Schema({
   },
   address: {
     type: String,
+  },
+  gender: {
+    type: String,
   }
   // services:[{
   //   type: Schema.Types.ObjectId,

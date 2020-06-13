@@ -3,7 +3,7 @@
 const express = require("express");
 const { check } = require("express-validator");
 const router = express.Router();
-const { signup, login, vendorSignup, getUsers } = require("../controllers/user");
+const { signup, login, vendorSignup, getUsers, getMyInfo } = require("../controllers/user");
 const {verifyAdmin, verifyUser, verifyVendor} = require('../middlewares/verifyuser')
 
 /**
@@ -74,6 +74,8 @@ router.post(
  */
 
 router.get("/getAllUsers", verifyUser, verifyAdmin, getUsers);
+
+router.get("/getMyInfo/:id", verifyUser, getMyInfo);
 
 
 module.exports = router;
