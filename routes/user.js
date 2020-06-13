@@ -3,7 +3,7 @@
 const express = require("express");
 const { check } = require("express-validator");
 const router = express.Router();
-const { signup, login, vendorSignup, getUsers } = require("../controllers/user");
+const { signup, login, vendorSignup, getUsers, getMyInfo } = require("../controllers/user");
 const {verifyAdmin, verifyUser, verifyVendor} = require('../middlewares/verifyuser')
 
 /**
@@ -15,6 +15,10 @@ const {verifyAdmin, verifyUser, verifyVendor} = require('../middlewares/verifyus
 router.post(
   "/signup",
   [
+    check("name", "Please Enter a Valid name").not().isEmpty(),
+    check("phonenumber", "Please Enter a Valid phonenumber").not().isEmpty(),
+    check("gender", "Please pick a Valid gender").not().isEmpty(),
+    check("address", "Please Enter a Valid address").not().isEmpty(),
     check("username", "Please Enter a Valid Username").not().isEmpty(),
     check("email", "Please enter a valid email").isEmail(),
     check("password", "Please enter a valid password").isLength({
@@ -74,6 +78,8 @@ router.post(
  */
 
 router.get("/getAllUsers", verifyUser, verifyAdmin, getUsers);
+
+router.get("/getMyInfo/:id", verifyUser, getMyInfo);
 
 
 module.exports = router;
