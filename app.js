@@ -9,12 +9,21 @@ const vendor = require("./routes/vendor");
 const cors = require('cors');
 const app = express();
 
-mongoose.connect('mongodb+srv://Dami_user1:La6xrkFYtO6EFesA@cluster0-teywi.mongodb.net/test?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true})
-.then(() => {
-    console.log('Successfully connected to MongoDB Atlas!');
+mongoose
+  .connect(
+    "mongodb+srv://Dami_user1:La6xrkFYtO6EFesA@cluster0-teywi.mongodb.net/test?retryWrites=true&w=majority",
+    {
+      useFindAndModify: false,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    }
+  )
+  .then(() => {
+    console.log("Successfully connected to MongoDB Atlas!");
   })
   .catch((error) => {
-    console.log('Unable to connect to MongoDB Atlas!');
+    console.log("Unable to connect to MongoDB Atlas!");
     console.error(error);
   });
 app.use(cors());

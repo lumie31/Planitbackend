@@ -80,7 +80,7 @@ router.get("/getSingleService/:id", verifyUser, getServiceById);
  * @description - Delete Service by Id
  */
 
-router.delete("/deleteService/:id", verifyUser, verifyVendor, deleteService)
+router.delete("/deleteService/:id", deleteService)
 
 /**
  * @method - PATCH
@@ -88,7 +88,16 @@ router.delete("/deleteService/:id", verifyUser, verifyVendor, deleteService)
  * @description - Edit/Update Service by Id
  */
 
-router.patch("/editService/:id", verifyUser, verifyVendor, editService)
+router.patch(
+  "/editService/:id",
+  [
+    check("title", "Email cannot be empty").not().isEmpty(),
+    check("description", "Description cannot be empty").not().isEmpty(),
+    check("imageUrl", "ImageUrl cannot be empty").not().isEmpty(),
+    check("price", "Price cannot be empty").not().isEmpty(),
+  ],
+  editService
+);
 
 
 module.exports = router;
