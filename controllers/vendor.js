@@ -53,15 +53,15 @@ exports.service = async (req, res) => {
 // Get all services
 exports.getService = async (req, res) => {
   try {
-    let service = await ServiceModel.find();
-    if (service) {
+    let services = await ServiceModel.find();
+    if (services) {
       return res.status(200).json({
-        service,
+        services,
       });
     }
   } catch (err) {
     console.log(err.message);
-    res.status(500).send("Error fetching service");
+    res.status(500).send("Error fetching services");
   }
 };
 
@@ -140,6 +140,13 @@ exports.deleteService = async (req, res) => {
 
 // Edit a service
 exports.editService = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
+  
   try {
     let id = req.params.id;
     let {title, description, imageUrl, price} = req.body;
