@@ -32,7 +32,7 @@ const UserSchema = mongoose.Schema({
   services: {
     type: String,
   },
-  comapnyName: {
+  companyName: {
     type: String,
   },
   address: {

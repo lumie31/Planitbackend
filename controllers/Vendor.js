@@ -95,11 +95,12 @@ exports.getVendorsById = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error fetching Vendors");
   }
 };
 
+// Get service by Id
 exports.getServiceById = async (req, res) => {
   try {
     let id = req.params.id;
@@ -115,3 +116,24 @@ exports.getServiceById = async (req, res) => {
     res.status(500).send("Error fetching service");
   }
 };
+
+// Delete a service
+exports.deleteService = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let service = await ServiceModel.findByIdAndDelete(id);
+
+    if (!service) {
+      return res.status(404).json({
+        message: "Service not found"
+      })
+    }
+    return res.status(200).json({
+      message: `${service.title} deleted successfully`
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occured"
+    })
+  }
+}
