@@ -36,8 +36,10 @@ app.use('/api', booking);
 app.use('/api/vendors', vendor);
 
 
-app.get('/', async(req, res)=>{
-  res.json({ message: "App Working" });
+app.get("/", async (req, res) => {
+  res.status(200).json({
+    message: "App Working",
+  });
 });
 
 app.all("*", (req, res) =>
