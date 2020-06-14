@@ -137,3 +137,37 @@ exports.deleteService = async (req, res) => {
     })
   }
 }
+
+// Edit a service
+exports.editService = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let {title, description, imageUrl, price} = req.body;
+    let service = await ServiceModel.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          title,
+          description,
+          imageUrl,
+          price,
+        },
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!service) {
+      return res.status(404).json({
+        message: "Service not found",
+      });
+    }
+    return res.status(200).json({
+      message: "Service updated successfully",
+      service,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occured",
+    });
+  }
+};
