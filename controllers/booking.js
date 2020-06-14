@@ -70,3 +70,22 @@ exports.acceptBooking = async (req, res) => {
     res.status(500).send("Error fetching your Bookings");
   }
 }
+
+// Get/See all bookings on platform (Admin)
+exports.getAllBookings = async (req, res) => {
+  try {
+    let bookings = await BookingModel.find();
+    if (!bookings) {
+      res.status(404).json({
+        message: "No Bookings available",
+      });
+    }
+    return res.status(200).json({
+      bookings,
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: "Error fetching bookings",
+    });
+  }
+};
