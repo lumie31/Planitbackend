@@ -37,7 +37,8 @@ app.use('/api/vendors', vendor);
 
 
 app.get("/", async (req, res) => {
-  res.status(200).json({
+  res.json({
+    status: 200,
     message: "App Working",
   });
 });
