@@ -80,7 +80,7 @@ router.get("/getSingleService/:id", verifyUser, getServiceById);
  * @description - Delete Service by Id
  */
 
-router.delete("/deleteService/:id", deleteService)
+router.delete("/deleteService/:id", verifyUser, verifyVendor, deleteService)
 
 /**
  * @method - PATCH
@@ -96,6 +96,8 @@ router.patch(
     check("imageUrl", "ImageUrl cannot be empty").not().isEmpty(),
     check("price", "Price cannot be empty").not().isEmpty(),
   ],
+  verifyUser,
+  verifyVendor,
   editService
 );
 
