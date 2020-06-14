@@ -211,7 +211,7 @@ exports.getMyInfo = async(req, res) => {
   try {
     let id = await req.params.id;
     let user = await UserModel.findOne({
-      _id: await id,
+      _id: id,
     });
     if (user) {
       return res.status(200).json({
@@ -220,6 +220,6 @@ exports.getMyInfo = async(req, res) => {
     }
   } catch (err) {
     console.log(err.message);
-    res.status(500).send("Error fetching user infp");
+    res.status(500).send("Error fetching user info");
   }
 }

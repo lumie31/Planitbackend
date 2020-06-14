@@ -22,6 +22,8 @@ const {
   getVendors,
   getVendorsById,
   getServiceById,
+  deleteService,
+  editService,
 } = require("../controllers/vendor");
 const {
   verifyAdmin,
@@ -71,5 +73,22 @@ router.get("/getSingleVendor/:id", verifyUser, getVendorsById);
  */
 
 router.get("/getSingleService/:id", verifyUser, getServiceById);
+
+/**
+ * @method - DELETE
+ * @param - /deleteService
+ * @description - Delete Service by Id
+ */
+
+router.delete("/deleteService/:id", verifyUser, verifyVendor, deleteService)
+
+/**
+ * @method - PATCH
+ * @param - /editService
+ * @description - Edit/Update Service by Id
+ */
+
+router.patch("/editService/:id", verifyUser, verifyVendor, editService)
+
 
 module.exports = router;

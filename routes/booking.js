@@ -2,7 +2,7 @@ const express = require("express");
 const { check } = require("express-validator");
 const router = express.Router();
 const {
- booking, acceptBooking
+ booking, acceptBooking, getAllBookings
 } = require("../controllers/booking");
 const {
   verifyAdmin,
@@ -37,6 +37,16 @@ router.post(
 
 router.get(
   "/acceptBooking", verifyUser, acceptBooking
+);
+
+/**
+ * @method - GET
+ * @param - /GetAllBookedService(Admin)
+ * @description - Get/see all bookings
+ */
+
+router.get(
+  "/getAllBookings", verifyUser, verifyAdmin, getAllBookings
 );
 
 module.exports = router;
