@@ -235,6 +235,14 @@ exports.login = async (req, res, next) => {
             },
             (err, token) => {
               if (err) throw err;
+              if(user.role.toLowerCase() === "vendor")
+              res.status(200).json({
+                userId: user._id,
+                token,
+                role: user.role,
+                serviceTypes: user.services.split(",")
+              });
+              else
               res.status(200).json({
                 userId: user._id,
                 token,
