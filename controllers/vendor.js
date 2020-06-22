@@ -14,7 +14,7 @@ exports.service = async (req, res) => {
   }
 
   const {
-    body: { title, description, imageUrl, price },
+    body: { title, description, imageUrl, price, serviceType, userId, state, address, discount },
     user: { id },
     file
   } = req;
@@ -23,7 +23,7 @@ exports.service = async (req, res) => {
   try {
     let service = await ServiceModel.findOne({
       title,
-      userId: id
+      userId
     });
     if (service) {
       return res.status(422).json({
@@ -36,7 +36,12 @@ exports.service = async (req, res) => {
       description,
       imageUrl,
       price, 
-      userId: id
+      userId,
+      serviceType,
+      active: true,
+      state,
+      address, 
+      discount
     });
 
 
@@ -101,6 +106,24 @@ exports.getVendorsById = async (req, res) => {
 };
 
 // Get service by Id
+exports.getServiceByVendorId = async (req, res) => {
+  try {
+    let id = req.params.vendorid;
+    // console.log(id);
+    let service = await ServiceModel.find({
+      userid: id
+    });
+    if (service) {
+      return res.status(200).json({
+        service,
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error fetching service");
+  }
+};
+// Get service by Id
 exports.getServiceById = async (req, res) => {
   try {
     let id = req.params.id;
@@ -121,8 +144,59 @@ exports.getServiceById = async (req, res) => {
 exports.deleteService = async (req, res) => {
   try {
     let id = req.params.id;
-    let service = await ServiceModel.findByIdAndDelete(id);
+    let service = await ServiceModel.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          title:service.title,
+          description:service.description,
+          imageUrl:service.imageUrl,
+          price:service.price,
+          userId:service.userId,
+          serviceType:service.serviceType,
+          active:false,
+          address: service.address,
+          state: service.state
+        },
+      },
+      { new: true, runValidators: true }
+    );
+    if (!service) {
+      return res.status(404).json({
+        message: "Service not found"
+      })
+    }
+    return res.status(200).json({
+      message: `${service.title} deleted successfully`
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: "An error occured"
+    })
+  }
+}
 
+// Delete a service
+exports.activateService = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let service = await ServiceModel.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          title:service.title,
+          description:service.description,
+          imageUrl:service.imageUrl,
+          price:service.price,
+          userId:service.userId,
+          serviceType:service.serviceType,
+          active:true,
+          address: service.address,
+          state: service.state
+        },
+      },
+      { new: true, runValidators: true }
+    );
     if (!service) {
       return res.status(404).json({
         message: "Service not found"
@@ -149,7 +223,7 @@ exports.editService = async (req, res) => {
   
   try {
     let id = req.params.id;
-    let {title, description, imageUrl, price} = req.body;
+    let {title, description, imageUrl, price, userId,serviceType, address, state, discount} = req.body;
     let service = await ServiceModel.findByIdAndUpdate(
       id,
       {
@@ -158,6 +232,12 @@ exports.editService = async (req, res) => {
           description,
           imageUrl,
           price,
+          userId,
+          serviceType,
+          active:service.active,
+          address,
+          state, 
+          discount
         },
       },
       { new: true, runValidators: true }
