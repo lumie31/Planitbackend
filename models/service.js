@@ -16,7 +16,7 @@ const serviceSchema = mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  userid: {type:String, required: true},
+  userId: {type:String, required: true},
   serviceType: {type: String, required:true},
   active:{type:Boolean, required:true, default:true},
   state:{type:String, required:true, default:"Lagos"},
