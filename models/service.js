@@ -16,6 +16,8 @@ const serviceSchema = mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  userid: {type:String, required: true},
+  serviceType: {type: String, required:true}
   // userId: [
   //   {
   //     type: ObjectId,

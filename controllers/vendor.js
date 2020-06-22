@@ -14,7 +14,7 @@ exports.service = async (req, res) => {
   }
 
   const {
-    body: { title, description, imageUrl, price },
+    body: { title, description, imageUrl, price, serviceType, userId },
     user: { id },
     file
   } = req;
@@ -23,7 +23,7 @@ exports.service = async (req, res) => {
   try {
     let service = await ServiceModel.findOne({
       title,
-      userId: id
+      userId
     });
     if (service) {
       return res.status(422).json({
@@ -36,7 +36,8 @@ exports.service = async (req, res) => {
       description,
       imageUrl,
       price, 
-      userId: id
+      userId,
+      serviceType
     });
 
 
@@ -101,6 +102,24 @@ exports.getVendorsById = async (req, res) => {
 };
 
 // Get service by Id
+exports.getServiceByVendorId = async (req, res) => {
+  try {
+    let id = req.params.vendorid;
+    // console.log(id);
+    let service = await ServiceModel.find({
+      userid: id
+    });
+    if (service) {
+      return res.status(200).json({
+        service,
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error fetching service");
+  }
+};
+// Get service by Id
 exports.getServiceById = async (req, res) => {
   try {
     let id = req.params.id;
@@ -149,7 +168,7 @@ exports.editService = async (req, res) => {
   
   try {
     let id = req.params.id;
-    let {title, description, imageUrl, price} = req.body;
+    let {title, description, imageUrl, price, userId,serviceType} = req.body;
     let service = await ServiceModel.findByIdAndUpdate(
       id,
       {
@@ -158,6 +177,8 @@ exports.editService = async (req, res) => {
           description,
           imageUrl,
           price,
+          userId,
+          serviceType
         },
       },
       { new: true, runValidators: true }

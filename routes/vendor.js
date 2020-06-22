@@ -24,6 +24,7 @@ const {
   getServiceById,
   deleteService,
   editService,
+  getServiceByVendorId
 } = require("../controllers/vendor");
 const {
   verifyAdmin,
@@ -72,7 +73,10 @@ router.get("/getSingleVendor/:id", verifyUser, getVendorsById);
  * @description - Get Service by Id
  */
 
-router.get("/getSingleService/:id", verifyUser, getServiceById);
+router.get("/getSingleService/:id", getServiceById);
+
+
+router.get("/getServiceByVendorId/:vendorid", verifyUser, verifyVendor, getServiceByVendorId);
 
 /**
  * @method - DELETE
