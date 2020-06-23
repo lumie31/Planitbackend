@@ -27,7 +27,7 @@ exports.service = async (req, res) => {
     });
     if (service) {
       return res.status(422).json({
-        msg: "You can't enlist a service more than once",
+        message: "You can't enlist a service more than once",
       });
     }
 
