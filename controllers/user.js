@@ -31,7 +31,8 @@ exports.signup = async (req, res) => {
       username,
       email,
       password,
-      role: "user"
+      role: "user",
+      active:true
     });
 
     const salt = await bcrypt.genSalt(10);
@@ -101,6 +102,7 @@ exports.vendorSignup = async (req, res) => {
       services,
       gender,
       role: "vendor",
+      active:true
     });
 
     const salt = await bcrypt.genSalt(10);
@@ -169,6 +171,7 @@ exports.adminSignup = async (req, res) => {
       password,
       gender,
       role: "admin",
+      active:true
     });
 
     const salt = await bcrypt.genSalt(10);

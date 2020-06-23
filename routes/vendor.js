@@ -18,6 +18,7 @@ const { check } = require("express-validator");
 const router = express.Router();
 const {
   service,
+  adminGetSAllervice,
   getService,
   getVendors,
   getVendorsById,
@@ -52,13 +53,16 @@ router.get(
   "/getAllService", getService
 );
 
+router.get(
+  "/adminGetSAllervice", adminGetSAllervice
+);
 /**
  * @method - GET
  * @param - /getAllVenodors
  * @description - Get Vendors
  */
 
-router.get("/getAllVendors", verifyUser, verifyAdmin, getVendors);
+router.get("/getAllVendors", getVendors);
 
 /**
  * @method - GET
@@ -105,6 +109,18 @@ router.patch(
   ],
   verifyUser,
   verifyVendor,
+  editService
+);
+router.patch(
+  "/adminEditService/:id",
+  [
+    check("title", "Email cannot be empty").not().isEmpty(),
+    check("description", "Description cannot be empty").not().isEmpty(),
+    check("imageUrl", "ImageUrl cannot be empty").not().isEmpty(),
+    check("price", "Price cannot be empty").not().isEmpty(),
+  ],
+  verifyUser,
+  verifyAdmin,
   editService
 );
 
