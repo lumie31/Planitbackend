@@ -30,7 +30,7 @@ router.post(
 );
 
 router.post(
-  "/addToCart", verifyUser,
+  "/addToCart",
   [
     check("serviceId", "name is required").not().isEmpty(),
     check("userId", "email is required").not().isEmpty()
@@ -45,7 +45,7 @@ router.post(
  */
 
 router.get(
-  "/getCartCountByUserId/:id", verifyUser, getCartCountByUserId
+  "/getCartCountByUserId/:id", getCartCountByUserId
 );
 
 router.get(

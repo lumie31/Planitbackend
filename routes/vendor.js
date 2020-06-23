@@ -18,7 +18,7 @@ const { check } = require("express-validator");
 const router = express.Router();
 const {
   service,
-  adminGetSAllervice,
+  adminGetAllService,
   getService,
   getVendors,
   getVendorsById,
@@ -26,7 +26,9 @@ const {
   deleteService,
   editService,
   getServiceByVendorId,
-  activateService
+  activateService,
+  getSixAllDiscountServices,
+  getSixServicesByServiceType
 } = require("../controllers/vendor");
 const {
   verifyAdmin,
@@ -54,7 +56,11 @@ router.get(
 );
 
 router.get(
-  "/adminGetSAllervice", adminGetSAllervice
+  "/getSixAllDiscountServices", getSixAllDiscountServices
+);
+
+router.get(
+  "/adminGetAllService", adminGetAllService
 );
 /**
  * @method - GET
@@ -79,6 +85,8 @@ router.get("/getSingleVendor/:id", verifyUser, getVendorsById);
  */
 
 router.get("/getSingleService/:id", getServiceById);
+
+router.get("/getSixServicesByServiceType/:id", getSixServicesByServiceType);
 
 
 router.get("/getServiceByVendorId/:vendorid", verifyUser, verifyVendor, getServiceByVendorId);

@@ -24,7 +24,7 @@ const {verify} = require("jsonwebtoken");
       });
     }
     try {
-      const decoded = await verify(token, "randomString");
+      const decoded =  verify(token, "randomString");
       // console.log(req, decoded);
       req.user = decoded;
       return next();

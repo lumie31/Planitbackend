@@ -2,7 +2,7 @@ const {
   validationResult
 } = require("express-validator");
 const BookingModel = require("../models/booking");
-const CartModel = require("../models/booking");
+const CartModel = require("../models/cart");
 const ServiceModel = require("../models/service");
 const UserModel = require("../models/user");
 
@@ -64,6 +64,7 @@ exports.booking = async (req, res) => {
 
 // Add to cart
 exports.addToCart = async (req, res) => {
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -76,33 +77,37 @@ exports.addToCart = async (req, res) => {
     body: {
       userId,
       serviceId
-    },
-    user: {
-      id
-    },
+    }
   } = req;
   try {
     let cart = await CartModel.findOne({
       userId,
       serviceId
     });
+    // console.log({cart})
     if (cart) {
-      return res.status(422).json({
-        message: "You can't add motr than one of this to cart",
-      });
+      return res.status(422).json({message:"You can't add more than one of this to cart"});
     }
 
     cart = new CartModel({
       serviceId,
       userId
     });
-
-
     await cart.save();
-    res.status(201).json({
-      cart,
-    });
 
+     let newcart = await CartModel.find({
+      userId
+    });
+    if(newcart){
+      res.status(200).json({
+        count:newcart.length,
+      });
+    } else {
+      return res.status(422).json({
+        message: "Error in getting cart number",
+      });
+    }
+ 
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Error in adding to cart");
@@ -119,13 +124,14 @@ exports.getCartCountByUserId = async (req, res) => {
     let cart = await CartModel.find({
       userId: id
     });
+    console.log(id, cart)
     if (cart) {
       return res.status(200).json({
         count: cart.length,
       });
     } else {
-      return res.status(400).json({
-        message: "Cannot add item to cart",
+      return res.status(200).json({
+        count: 0,
       });
     }
   } catch (err) {
@@ -182,9 +188,7 @@ exports.acceptBooking = async (req, res) => {
         booking,
       });
     } else {
-      return res.status(404).json({
-        message: "Booking does not exist"
-      })
+      return res.status(404).send("Booking does not exist")
     }
   } catch (err) {
     console.log(err.message);
