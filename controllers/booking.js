@@ -1,4 +1,6 @@
-const { validationResult } = require("express-validator");
+const {
+  validationResult
+} = require("express-validator");
 const BookingModel = require("../models/booking");
 const CartModel = require("../models/booking");
 const ServiceModel = require("../models/service");
@@ -16,8 +18,16 @@ exports.booking = async (req, res) => {
   // console.log(req.user)
 
   const {
-    body: { name, email, phone, address, dateNeeded },
-    user: { id },
+    body: {
+      name,
+      email,
+      phone,
+      address,
+      dateNeeded
+    },
+    user: {
+      id
+    },
   } = req;
   try {
     let booking = await BookingModel.findOne({
@@ -34,7 +44,7 @@ exports.booking = async (req, res) => {
       name,
       email,
       phone,
-      address, 
+      address,
       dateNeeded,
       userId: id
     });
@@ -42,9 +52,9 @@ exports.booking = async (req, res) => {
 
     await booking.save();
     res.status(201).json({
-       booking,
-     });
-    
+      booking,
+    });
+
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Error in booking vendor");
@@ -52,7 +62,7 @@ exports.booking = async (req, res) => {
 };
 
 
-// Book a service
+// Add to cart
 exports.addToCart = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -63,8 +73,13 @@ exports.addToCart = async (req, res) => {
   // console.log(req.user)
 
   const {
-    body: { userId, serviceId},
-    user: { id },
+    body: {
+      userId,
+      serviceId
+    },
+    user: {
+      id
+    },
   } = req;
   try {
     let cart = await CartModel.findOne({
@@ -86,13 +101,77 @@ exports.addToCart = async (req, res) => {
     await cart.save();
     res.status(201).json({
       cart,
-     });
-    
+    });
+
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Error in adding to cart");
   }
-};// Accept a booking
+};
+
+
+
+// Get service by Id
+exports.getCartCountByUserId = async (req, res) => {
+  try {
+    let id = req.params.vendorid;
+    // console.log(id);
+    let cart = await CartModel.find({
+      userId: id
+    });
+    if (cart) {
+      return res.status(200).json({
+        count: cart.length,
+      });
+    } else {
+      return res.status(400).json({
+        message: "Cannot add item to cart",
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error fetching service");
+  }
+};
+
+exports.getCartContentByUserId = async (req, res) => {
+  try {
+    let id = req.params.vendorid;
+    // console.log(id);
+    let cart = await CartModel.find({
+      userId: id
+    });
+
+
+    if (cart) {
+
+      const serviceIds = cart.map(val => val.serviceId)
+      const services = serviceIds.map(async (serviceId) => {
+        return await ServiceModel.findById(serviceId);
+      });
+      if(services) {
+        return res.status(200).json({
+          services
+        });
+      } else{
+        return res.status(200).json({
+          
+        });
+      }
+    } else {
+      return res.status(200).json({
+        
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error fetching service");
+  }
+};
+
+
+
+// Accept a booking
 exports.acceptBooking = async (req, res) => {
   try {
     let id = req.params.id;
@@ -111,7 +190,7 @@ exports.acceptBooking = async (req, res) => {
     console.log(err.message);
     res.status(500).send("Error fetching your Bookings");
   }
-}
+};
 
 // Get/See all bookings on platform (Admin)
 exports.getAllBookings = async (req, res) => {

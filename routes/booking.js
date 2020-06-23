@@ -2,7 +2,7 @@ const express = require("express");
 const { check } = require("express-validator");
 const router = express.Router();
 const {
- booking, acceptBooking, getAllBookings
+ booking, acceptBooking, getAllBookings, getCartCountByUserId, addToCart, getCartContentByUserId
 } = require("../controllers/booking");
 const {
   verifyAdmin,
@@ -32,13 +32,10 @@ router.post(
 router.post(
   "/addToCart", verifyUser,
   [
-    check("name", "name is required").not().isEmpty(),
-    check("email", "email is required").not().isEmpty(),
-    check("phone", "phone is required").not().isEmpty(),
-    check("address", "address is required").not().isEmpty(),
-    check("dateNeeded", "dateNeeded is required").not().isEmpty(),
+    check("serviceId", "name is required").not().isEmpty(),
+    check("userId", "email is required").not().isEmpty()
   ],
-  booking
+  addToCart
 );
 
 /**
@@ -46,6 +43,16 @@ router.post(
  * @param - /GetBookedService
  * @description - Accept a booking
  */
+
+router.get(
+  "/getCartCountByUserId/:id", verifyUser, getCartCountByUserId
+);
+
+router.get(
+  "/getCartContentByUserId/:id", verifyUser, getCartContentByUserId
+);
+
+
 
 router.get(
   "/acceptBooking", verifyUser, acceptBooking

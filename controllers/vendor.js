@@ -130,7 +130,7 @@ exports.getServiceByVendorId = async (req, res) => {
     let id = req.params.vendorid;
     // console.log(id);
     let service = await ServiceModel.find({
-      userid: id
+      userId: id
     });
     if (service) {
       return res.status(200).json({
