@@ -29,6 +29,18 @@ router.post(
   booking
 );
 
+router.post(
+  "/addToCart", verifyUser,
+  [
+    check("name", "name is required").not().isEmpty(),
+    check("email", "email is required").not().isEmpty(),
+    check("phone", "phone is required").not().isEmpty(),
+    check("address", "address is required").not().isEmpty(),
+    check("dateNeeded", "dateNeeded is required").not().isEmpty(),
+  ],
+  booking
+);
+
 /**
  * @method - GET
  * @param - /GetBookedService

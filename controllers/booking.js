@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const BookingModel = require("../models/booking");
+const CartModel = require("../models/booking");
 const ServiceModel = require("../models/service");
 const UserModel = require("../models/user");
 
@@ -50,7 +51,48 @@ exports.booking = async (req, res) => {
   }
 };
 
-// Accept a booking
+
+// Book a service
+exports.addToCart = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      errors: errors.array(),
+    });
+  }
+  // console.log(req.user)
+
+  const {
+    body: { userId, serviceId},
+    user: { id },
+  } = req;
+  try {
+    let cart = await CartModel.findOne({
+      userId,
+      serviceId
+    });
+    if (cart) {
+      return res.status(422).json({
+        msg: "You can't add motr than one of this to cart",
+      });
+    }
+
+    cart = new CartModel({
+      serviceId,
+      userId
+    });
+
+
+    await cart.save();
+    res.status(201).json({
+      cart,
+     });
+    
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error in adding to cart");
+  }
+};// Accept a booking
 exports.acceptBooking = async (req, res) => {
   try {
     let id = req.params.id;

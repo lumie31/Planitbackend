@@ -69,6 +69,25 @@ exports.getService = async (req, res) => {
     res.status(500).send("Error fetching services");
   }
 };
+// Get all services
+exports.adminGetSAllervice = async (req, res) => {
+  try {
+    let services = await ServiceModel.find();
+    if (services) {
+      services.map(val => {
+        let d = val;
+        delete d['imageUrl'];
+        return d;
+      });
+      return res.status(200).json({
+        services,
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error fetching services");
+  }
+};
 
 // Get all vendors
 exports.getVendors = async (req, res) => {
@@ -234,7 +253,7 @@ exports.editService = async (req, res) => {
           price,
           userId,
           serviceType,
-          active:service.active,
+          active:true,
           address,
           state, 
           discount
@@ -254,7 +273,7 @@ exports.editService = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      message: "An error occured",
+      message: error.message,
     });
   }
 };

@@ -40,7 +40,13 @@ const UserSchema = mongoose.Schema({
   },
   gender: {
     type: String,
-  }
+  },
+    active: {
+      type: Boolean,
+      default: true,
+      required: true
+    }
+  
   // services:[{
   //   type: Schema.Types.ObjectId,
   //   ref: 'ServiceType'
