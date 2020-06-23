@@ -19,7 +19,7 @@ exports.signup = async (req, res) => {
     });
     if (user) {
       return res.status(400).json({
-        msg: "User Already Exists",
+        message: "User Already Exists",
       });
     }
 
@@ -87,7 +87,7 @@ exports.vendorSignup = async (req, res) => {
     });
     if (checkemail || checkusername) {
       return res.status(400).json({
-        msg: "Vendor Already Exists",
+        message: "Vendor Already Exists",
       });
     }
 
@@ -156,12 +156,12 @@ exports.adminSignup = async (req, res) => {
     });
     if (checkemail || checkusername) {
       return res.status(400).json({
-        msg: "Admin Already Exists",
+        message: "Admin Already Exists",
       });
     }
     if(passcode !== "root") {
       return res.status(401).json({
-        msg: "unauthorized",
+        message: "unauthorized",
       });
     }
     user = new UserModel({

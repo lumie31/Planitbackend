@@ -26,7 +26,7 @@ exports.booking = async (req, res) => {
     });
     if (booking) {
       return res.status(422).json({
-        msg: "Vendor is not available for the desired date",
+        message: "Vendor is not available for the desired date",
       });
     }
 
@@ -73,7 +73,7 @@ exports.addToCart = async (req, res) => {
     });
     if (cart) {
       return res.status(422).json({
-        msg: "You can't add motr than one of this to cart",
+        message: "You can't add motr than one of this to cart",
       });
     }
 
@@ -104,7 +104,7 @@ exports.acceptBooking = async (req, res) => {
       });
     } else {
       return res.status(404).json({
-        msg: "Booking does not exist"
+        message: "Booking does not exist"
       })
     }
   } catch (err) {
