@@ -20,7 +20,7 @@ const serviceSchema = mongoose.Schema({
   active:{type:Boolean, required:true, default:true},
   state:{type:String, required:true, default:"Lagos"},
   address:{type:String, required:true, default:""},
-  discount:{type:String, default:""}
+  discount:{type:String}
   // userId: [
   //   {
   //     type: ObjectId,

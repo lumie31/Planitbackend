@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const ServiceModel = require("../models/service");
 const UserModel = require("../models/user");
+const shuffle = require("../functions/shuffle");
 
 
 
@@ -69,16 +70,53 @@ exports.getService = async (req, res) => {
     res.status(500).send("Error fetching services");
   }
 };
+
 // Get all services
-exports.adminGetSAllervice = async (req, res) => {
+exports.getSixAllDiscountServices = async (req, res) => {
   try {
-    let services = await ServiceModel.find();
+    let services = await ServiceModel.find( { discount : { $exists: true } } ).limit(6);
     if (services) {
-      services.map(val => {
-        let d = val;
-        delete d['imageUrl'];
-        return d;
+      // console.log({services});
+      const shuffledservices = shuffle  (services);
+      
+      return res.status(200).json({
+        services: shuffledservices,
       });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error fetching services");
+  }
+};
+// Get all services
+exports.getSixServicesByServiceType = async (req, res) => {
+  try {
+    let id = req.params.id;
+    console.log(id)
+    let services = await ServiceModel.find( { "serviceType" :   { $regex: new RegExp('^'+ id + '$', "i") }} ).limit(6);
+    if (services) {
+      // console.log({services});
+      const shuffledservices = shuffle  (services);
+      
+      return res.status(200).json({
+        services: shuffledservices,
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error fetching services");
+  }
+};
+// Get all services
+exports.adminGetAllService = async (req, res) => {
+  try {
+    let services = await ServiceModel.find({},{title:1, serviceType:1, name:1, userId:1, email:1, active:1});
+    if (services) {
+      // services.map(val => {
+      //   let d = val;
+      //   delete d['imageUrl'];
+      //   return d;
+      // });
       return res.status(200).json({
         services,
       });
@@ -130,7 +168,7 @@ exports.getServiceByVendorId = async (req, res) => {
     let id = req.params.vendorid;
     // console.log(id);
     let service = await ServiceModel.find({
-      userid: id
+      userId: id
     });
     if (service) {
       return res.status(200).json({
