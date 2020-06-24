@@ -18,7 +18,7 @@ const {
  */
 
 router.post(
-  "/bookVendor", verifyUser,
+  "/bookVendor/:serviceId", verifyUser,
   [
     check("name", "name is required").not().isEmpty(),
     check("email", "email is required").not().isEmpty(),
@@ -45,11 +45,11 @@ router.post(
  */
 
 router.get(
-  "/getCartCountByUserId/:id", getCartCountByUserId
+  "/getCartCountByUserId/:vendorid", getCartCountByUserId
 );
 
 router.get(
-  "/getCartContentByUserId/:id", verifyUser, getCartContentByUserId
+  "/getCartContentByUserId/:vendorid", verifyUser, getCartContentByUserId
 );
 
 
