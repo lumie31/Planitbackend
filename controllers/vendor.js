@@ -1,9 +1,9 @@
-const { validationResult } = require("express-validator");
-const ServiceModel = require("../models/service");
-const UserModel = require("../models/user");
-const shuffle = require("../functions/shuffle");
-
-
+const {
+  validationResult
+} = require("express-validator"),
+  ServiceModel = require("../models/service"),
+  UserModel = require("../models/user"),
+  shuffle = require("../functions/shuffle");
 
 // Create a service
 exports.service = async (req, res) => {
@@ -15,8 +15,20 @@ exports.service = async (req, res) => {
   }
 
   const {
-    body: { title, description, imageUrl, price, serviceType, userId, state, address, discount },
-    user: { id },
+    body: {
+      title,
+      description,
+      imageUrl,
+      price,
+      serviceType,
+      userId,
+      state,
+      address,
+      discount
+    },
+    user: {
+      id
+    },
     file
   } = req;
   console.log(req.user)
@@ -36,21 +48,21 @@ exports.service = async (req, res) => {
       title,
       description,
       imageUrl,
-      price, 
+      price,
       userId,
       serviceType,
       active: true,
       state,
-      address, 
+      address,
       discount
     });
 
 
     await service.save();
     res.status(201).json({
-       service,
-     });
-    
+      service,
+    });
+
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Error in Saving Service");
@@ -74,11 +86,15 @@ exports.getService = async (req, res) => {
 // Get all services
 exports.getSixAllDiscountServices = async (req, res) => {
   try {
-    let services = await ServiceModel.find( { discount : { $exists: true } } ).limit(6);
+    let services = await ServiceModel.find({
+      discount: {
+        $exists: true
+      }
+    }).limit(6);
     if (services) {
       // console.log({services});
-      const shuffledservices = shuffle  (services);
-      
+      const shuffledservices = shuffle(services);
+
       return res.status(200).json({
         services: shuffledservices,
       });
@@ -92,12 +108,16 @@ exports.getSixAllDiscountServices = async (req, res) => {
 exports.getSixServicesByServiceType = async (req, res) => {
   try {
     let id = req.params.id;
-    console.log(id)
-    let services = await ServiceModel.find( { "serviceType" :   { $regex: new RegExp('^'+ id + '$', "i") }} ).limit(6);
+    // console.log(id)
+    let services = await ServiceModel.find({
+      "serviceType": {
+        $regex: new RegExp('^' + id + '$', "i")
+      }
+    }).limit(6);
     if (services) {
       // console.log({services});
-      const shuffledservices = shuffle  (services);
-      
+      const shuffledservices = shuffle(services);
+
       return res.status(200).json({
         services: shuffledservices,
       });
@@ -110,7 +130,14 @@ exports.getSixServicesByServiceType = async (req, res) => {
 // Get all services
 exports.adminGetAllService = async (req, res) => {
   try {
-    let services = await ServiceModel.find({},{title:1, serviceType:1, name:1, userId:1, email:1, active:1});
+    let services = await ServiceModel.find({}, {
+      title: 1,
+      serviceType: 1,
+      name: 1,
+      userId: 1,
+      email: 1,
+      active: 1
+    });
     if (services) {
       // services.map(val => {
       //   let d = val;
@@ -197,26 +224,48 @@ exports.getServiceById = async (req, res) => {
   }
 };
 
+// Get service by Id
+exports.getSingleServiceWithoutPicture = async (req, res) => {
+  try {
+    let id = req.params.id;
+    // console.log(id);
+    let service = await ServiceModel.findById(id, {
+      title: 1,
+      price: 1,
+      serviceType: 1,
+      userId: 1
+    });
+    if (service) {
+      return res.status(200).json({
+        service,
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Error fetching service");
+  }
+};
 // Delete a service
 exports.deleteService = async (req, res) => {
   try {
     let id = req.params.id;
     let service = await ServiceModel.findByIdAndUpdate(
-      id,
-      {
+      id, {
         $set: {
-          title:service.title,
-          description:service.description,
-          imageUrl:service.imageUrl,
-          price:service.price,
-          userId:service.userId,
-          serviceType:service.serviceType,
-          active:false,
+          title: service.title,
+          description: service.description,
+          imageUrl: service.imageUrl,
+          price: service.price,
+          userId: service.userId,
+          serviceType: service.serviceType,
+          active: false,
           address: service.address,
           state: service.state
         },
-      },
-      { new: true, runValidators: true }
+      }, {
+        new: true,
+        runValidators: true
+      }
     );
     if (!service) {
       return res.status(404).json({
@@ -238,21 +287,14 @@ exports.activateService = async (req, res) => {
   try {
     let id = req.params.id;
     let service = await ServiceModel.findByIdAndUpdate(
-      id,
-      {
+      id, {
         $set: {
-          title:service.title,
-          description:service.description,
-          imageUrl:service.imageUrl,
-          price:service.price,
-          userId:service.userId,
-          serviceType:service.serviceType,
-          active:true,
-          address: service.address,
-          state: service.state
+          active: true
         },
-      },
-      { new: true, runValidators: true }
+      }, {
+        new: true,
+        runValidators: true
+      }
     );
     if (!service) {
       return res.status(404).json({
@@ -277,13 +319,22 @@ exports.editService = async (req, res) => {
       errors: errors.array(),
     });
   }
-  
+
   try {
     let id = req.params.id;
-    let {title, description, imageUrl, price, userId,serviceType, address, state, discount} = req.body;
+    let {
+      title,
+      description,
+      imageUrl,
+      price,
+      userId,
+      serviceType,
+      address,
+      state,
+      discount
+    } = req.body;
     let service = await ServiceModel.findByIdAndUpdate(
-      id,
-      {
+      id, {
         $set: {
           title,
           description,
@@ -291,13 +342,15 @@ exports.editService = async (req, res) => {
           price,
           userId,
           serviceType,
-          active:true,
+          active: true,
           address,
-          state, 
+          state,
           discount
         },
-      },
-      { new: true, runValidators: true }
+      }, {
+        new: true,
+        runValidators: true
+      }
     );
 
     if (!service) {

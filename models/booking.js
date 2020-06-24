@@ -26,9 +26,19 @@ const BookingSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  serviceId: {
+    type: String,
+    required: true,
+  },
+  userId: {
+    type: String
+  },
   accepted: {
     type: Boolean,
     default: false
+  },
+  attendanceNo: {
+    type:Number
   }
 });
 

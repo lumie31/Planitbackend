@@ -15,6 +15,8 @@ exports.booking = async (req, res) => {
       errors: errors.array(),
     });
   }
+
+  const serviceid = req.params.serviceId;
   // console.log(req.user)
 
   const {
@@ -23,22 +25,26 @@ exports.booking = async (req, res) => {
       email,
       phone,
       address,
-      dateNeeded
+      dateNeeded,
+      vendorId,
+      serviceId,
+      userId = "",
+      attendanceNo
     },
     user: {
       id
     },
   } = req;
   try {
-    let booking = await BookingModel.findOne({
-      dateNeeded,
-      userId: id,
-    });
-    if (booking) {
-      return res.status(422).json({
-        message: "Vendor is not available for the desired date",
-      });
-    }
+    // let booking = await BookingModel.findOne({
+    //   dateNeeded,
+    //   userId: id,
+    // });
+    // if (booking) {
+    //   return res.status(422).json({
+    //     message: "Vendor is not available for the desired date",
+    //   });
+    // }
 
     booking = new BookingModel({
       name,
@@ -46,7 +52,11 @@ exports.booking = async (req, res) => {
       phone,
       address,
       dateNeeded,
-      userId: id
+      userId: id,
+      vendorId,
+      serviceId,
+      userId,
+      attendanceNo
     });
 
 
@@ -86,7 +96,9 @@ exports.addToCart = async (req, res) => {
     });
     // console.log({cart})
     if (cart) {
-      return res.status(422).json({message:"You can't add more than one of this to cart"});
+      return res.status(422).json({
+        message: "You can't add more than one of this to cart"
+      });
     }
 
     cart = new CartModel({
@@ -95,19 +107,19 @@ exports.addToCart = async (req, res) => {
     });
     await cart.save();
 
-     let newcart = await CartModel.find({
+    let newcart = await CartModel.find({
       userId
     });
-    if(newcart){
+    if (newcart) {
       res.status(200).json({
-        count:newcart.length,
+        count: newcart.length,
       });
     } else {
       return res.status(422).json({
         message: "Error in getting cart number",
       });
     }
- 
+
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Error in adding to cart");
@@ -122,9 +134,9 @@ exports.getCartCountByUserId = async (req, res) => {
     let id = req.params.vendorid;
     // console.log(id);
     let cart = await CartModel.find({
-      userId: id
+      userId: id,
     });
-    console.log(id, cart)
+    // console.log(id, cart)
     if (cart) {
       return res.status(200).json({
         count: cart.length,
@@ -152,21 +164,31 @@ exports.getCartContentByUserId = async (req, res) => {
     if (cart) {
 
       const serviceIds = cart.map(val => val.serviceId)
-      const services = serviceIds.map(async (serviceId) => {
-        return await ServiceModel.findById(serviceId);
+      // console.log({serviceIds})
+      const services = await ServiceModel.find({
+        _id: {
+          $in: serviceIds
+        }
+      }, {
+        title: 1,
+        price: 1,
+        serviceType: 1,
+        userId: 1
       });
-      if(services) {
+
+      // console.log({ services})
+      if (services) {
         return res.status(200).json({
-          services
+          services: services
         });
-      } else{
+      } else {
         return res.status(200).json({
-          
+
         });
       }
     } else {
       return res.status(200).json({
-        
+
       });
     }
   } catch (err) {
