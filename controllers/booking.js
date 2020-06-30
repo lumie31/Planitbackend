@@ -214,9 +214,13 @@ exports.acceptBookingByBookingId = async (req, res) => {
   try {
     let id = req.params.id;
     // console.log(id);
-    let booking = await BookingModel.findOneAndUpdate(id, {
+    let booking = await BookingModel.findOneAndUpdate(
+      {
+        _id:id
+      }, {
       accepted: true
     });
+    // console.log(booking);
     if (booking) {
       return res.status(201).json({
         message: "Booking accepted",
@@ -327,7 +331,7 @@ exports.getBookingsByVendorId = async (req, res) => {
       vendorId
     }).sort({
       'createdAt': -1,
-      'accepted': -1
+      'accepted': 1
     });
     if (!bookings) {
       res.status(404).json({
@@ -335,7 +339,7 @@ exports.getBookingsByVendorId = async (req, res) => {
       });
     }
     // debugger;
-    // console.log({vendorId})
+    // console.log({bookings})
     const serviceIds = bookings.map(e => e.serviceId),
       services = await ServiceModel.find({
         _id: {

@@ -34,8 +34,7 @@ const BookingSchema = mongoose.Schema({
     type: String
   },
   accepted: {
-    type: Boolean,
-    default: false
+    type: Boolean
   },
   attendanceNo: {
     type:Number

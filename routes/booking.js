@@ -55,7 +55,7 @@ router.get(
 
 
 router.get(
-  "/acceptBookingByBookingId/:id", verifyUser, acceptBookingByBookingId
+  "/acceptBookingByBookingId/:id", verifyUser, verifyVendor, acceptBookingByBookingId
 );
 
 /**
