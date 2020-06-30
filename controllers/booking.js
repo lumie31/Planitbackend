@@ -65,11 +65,15 @@ exports.booking = async (req, res) => {
       //   serviceId,
       //   attendanceNo
       // });
-      bookinfo = await BookingModel.insertMany(bookindetails)
+      bookinfo = await BookingModel.insertMany(bookindetails);
+      
+      console.log(bookindetails, bookinfo);
     if (typeof userId !== "undefined") {
-      await CartModel.deleteMany({
-        userId: id
-      })
+      let result = await CartModel.deleteMany({
+        userId
+      });
+
+      console.log(result);
     }
     res.status(201).json({
       bookinfo,
