@@ -2,7 +2,7 @@ const express = require("express");
 const { check } = require("express-validator");
 const router = express.Router();
 const {
- booking, acceptBooking, getAllBookings, getCartCountByUserId, addToCart, getCartContentByUserId
+ booking, acceptBookingByBookingId, getAllBookings, getCartCountByUserId, addToCart, getCartContentByUserId, getBookingsByVendorId
 } = require("../controllers/booking");
 const {
   verifyAdmin,
@@ -18,7 +18,7 @@ const {
  */
 
 router.post(
-  "/bookVendor/:serviceId", verifyUser,
+  "/bookVendor",
   [
     check("name", "name is required").not().isEmpty(),
     check("email", "email is required").not().isEmpty(),
@@ -55,7 +55,7 @@ router.get(
 
 
 router.get(
-  "/acceptBooking", verifyUser, acceptBooking
+  "/acceptBookingByBookingId/:id", verifyUser, verifyVendor, acceptBookingByBookingId
 );
 
 /**
@@ -68,4 +68,8 @@ router.get(
   "/getAllBookings", verifyUser, verifyAdmin, getAllBookings
 );
 
+
+router.get(
+  "/getBookingsByVendorId/:vendorId", verifyUser, verifyVendor, getBookingsByVendorId
+);
 module.exports = router;

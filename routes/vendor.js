@@ -29,7 +29,8 @@ const {
   activateService,
   getSixAllDiscountServices,
   getSixServicesByServiceType,
-  getSingleServiceWithoutPicture
+  getSingleServiceWithoutPicture,
+  getServicePictureById
 } = require("../controllers/vendor");
 const {
   verifyAdmin,
@@ -86,6 +87,8 @@ router.get("/getSingleVendor/:id", verifyUser, getVendorsById);
  */
 
 router.get("/getSingleService/:id", getServiceById);
+
+router.get("/getServicePictureById/:id", getServicePictureById);
 
 router.get("/getSingleServiceWithoutPicture/:id", getSingleServiceWithoutPicture);
 

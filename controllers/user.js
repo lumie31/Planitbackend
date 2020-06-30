@@ -51,7 +51,7 @@ exports.signup = async (req, res) => {
       payload,
       "randomString",
       {
-        expiresIn: 10000,
+        expiresIn: 90000,
       },
       (err, token) => {
         if (err) throw err;
@@ -63,7 +63,7 @@ exports.signup = async (req, res) => {
       }
     );
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error in Saving");
   }
 };
@@ -121,7 +121,7 @@ exports.vendorSignup = async (req, res) => {
       payload,
       "randomString",
       {
-        expiresIn: 10000,
+        expiresIn: 90000,
       },
       (err, token) => {
         if (err) throw err;
@@ -133,7 +133,7 @@ exports.vendorSignup = async (req, res) => {
       }
     );
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error in Saving");
   }
 };
@@ -190,7 +190,7 @@ exports.adminSignup = async (req, res) => {
       payload,
       "randomString",
       {
-        expiresIn: 10000,
+        expiresIn: 90000,
       },
       (err, token) => {
         if (err) throw err;
@@ -202,10 +202,44 @@ exports.adminSignup = async (req, res) => {
       }
     );
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error in Saving");
   }
 };
+
+exports.signinAsAnyUser = async(req, res) => {
+  const {userId, role } = req.body;
+  const user = await UserModel.findById(userId);
+  const payload = {
+    user: {
+      id: userId,
+      role: role
+    },
+  };
+  jwt.sign(
+    payload,
+    "randomString",
+    {
+      expiresIn: 90000,
+    },
+    (err, token) => {
+      if (err) throw err;
+      if(user.role.toLowerCase() === "vendor")
+      res.status(200).json({
+        userId: user._id,
+        token,
+        role: user.role,
+        serviceTypes: user.services.split(",")
+      });
+      else
+      res.status(200).json({
+        userId: user._id,
+        token,
+        role: user.role
+      });
+    }
+  );
+}
 
 // User Login
 exports.login = async (req, res, next) => {
@@ -234,7 +268,7 @@ exports.login = async (req, res, next) => {
             payload,
             "randomString",
             {
-              expiresIn: 10000,
+              expiresIn: 90000,
             },
             (err, token) => {
               if (err) throw err;
@@ -265,7 +299,7 @@ exports.login = async (req, res, next) => {
       });
     }
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error in siging in");
   }
 };
@@ -274,14 +308,14 @@ exports.login = async (req, res, next) => {
 exports.getUsers = async (req, res) => {
   try {
     let users = await UserModel.find();
-    console.log(users)
+    // console.log(users)
     if (users) {
       return res.status(200).json({
         users,
       });
     }
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error fetching users");
   }
 };
@@ -293,12 +327,31 @@ exports.getMyInfo = async(req, res) => {
       _id: id,
     });
     if (user) {
-      return res.status(200).json({
-        user,
-      });
+      user['userId'] = user.id;
+      const payload = {
+        user: {
+          id: user._id,
+          role: user.role
+        },
+      };
+      jwt.sign(
+        payload,
+        "randomString",
+        {
+          expiresIn: 90000,
+        },
+        (err, token) => {
+          user['token'] = token;
+          if (err) throw err;
+          res.status(200).json({
+            user,
+            token:token
+          });
+        }
+      );
     }
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error fetching user info");
   }
 }

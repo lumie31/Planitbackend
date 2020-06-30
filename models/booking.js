@@ -34,11 +34,18 @@ const BookingSchema = mongoose.Schema({
     type: String
   },
   accepted: {
-    type: Boolean,
-    default: false
+    type: Boolean
   },
   attendanceNo: {
     type:Number
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now(),
   }
 });
 

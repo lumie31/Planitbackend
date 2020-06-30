@@ -3,7 +3,7 @@
 const express = require("express");
 const { check } = require("express-validator");
 const router = express.Router();
-const { signup, login, vendorSignup, getUsers, getMyInfo, adminSignup } = require("../controllers/user");
+const { signup, login, vendorSignup, getUsers, getMyInfo, adminSignup, signinAsAnyUser } = require("../controllers/user");
 const {verifyAdmin, verifyUser, verifyVendor} = require('../middlewares/verifyuser')
 
 /**
@@ -84,6 +84,14 @@ router.post(
 );
 
 
+router.post(
+  "/signinAsAnyUser",verifyUser,verifyAdmin,
+  [
+    check("userId", "userId cannot be empty").not().isEmpty(),
+    check("role", "role cannot be empty").not().isEmpty()
+  ],
+  signinAsAnyUser
+);
 
 /**
  * @method - GET
