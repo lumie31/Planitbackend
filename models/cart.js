@@ -10,6 +10,14 @@ var Schema = mongoose.Schema,
       serviceId: {
           type:String,
           required:true
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now(),
+      },
+      updatedAt: {
+        type: Date,
+        default: Date.now(),
       }
   });
   

@@ -39,6 +39,14 @@ const BookingSchema = mongoose.Schema({
   },
   attendanceNo: {
     type:Number
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now(),
   }
 });
 

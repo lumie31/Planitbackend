@@ -31,7 +31,7 @@ exports.service = async (req, res) => {
     },
     file
   } = req;
-  console.log(req.user)
+  // console.log(req.user)
   // const { title, description, imageUrl, price } = req.body;
   try {
     let service = await ServiceModel.findOne({
@@ -64,7 +64,7 @@ exports.service = async (req, res) => {
     });
 
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error in Saving Service");
   }
 };
@@ -78,7 +78,7 @@ exports.getService = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error fetching services");
   }
 };
@@ -90,6 +90,12 @@ exports.getSixAllDiscountServices = async (req, res) => {
       discount: {
         $exists: true
       }
+    },
+    {
+      title:1,
+      price:1,
+      discount:1
+
     }).limit(6);
     if (services) {
       // console.log({services});
@@ -100,7 +106,7 @@ exports.getSixAllDiscountServices = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error fetching services");
   }
 };
@@ -113,6 +119,10 @@ exports.getSixServicesByServiceType = async (req, res) => {
       "serviceType": {
         $regex: new RegExp('^' + id + '$', "i")
       }
+    }, {
+      title:1,
+      address:1,
+      state:1
     }).limit(6);
     if (services) {
       // console.log({services});
@@ -123,7 +133,7 @@ exports.getSixServicesByServiceType = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error fetching services");
   }
 };
@@ -149,7 +159,7 @@ exports.adminGetAllService = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error fetching services");
   }
 };
@@ -167,7 +177,7 @@ exports.getVendors = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error fetching Vendors");
   }
 };
@@ -196,6 +206,12 @@ exports.getServiceByVendorId = async (req, res) => {
     // console.log(id);
     let service = await ServiceModel.find({
       userId: id
+    }, {
+      title:1,
+      price:1,
+      createdAt:1,
+      active:1,
+      serviceType:1
     });
     if (service) {
       return res.status(200).json({
@@ -203,7 +219,7 @@ exports.getServiceByVendorId = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error fetching service");
   }
 };
@@ -219,7 +235,23 @@ exports.getServiceById = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
+    res.status(500).send("Error fetching service");
+  }
+};
+// Get servicepicture by Id
+exports.getServicePictureById = async (req, res) => {
+  try {
+    let id = req.params.id;
+    // console.log(id);
+    let service = await ServiceModel.findById(id, {imageUrl:1});
+    if (service) {
+      return res.status(200).json({
+        service,
+      });
+    }
+  } catch (err) {
+    // console.log(err.message);
     res.status(500).send("Error fetching service");
   }
 };
@@ -241,7 +273,7 @@ exports.getSingleServiceWithoutPicture = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.status(500).send("Error fetching service");
   }
 };

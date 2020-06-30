@@ -79,7 +79,7 @@ const {verify} = require("jsonwebtoken");
       } },
     } = req;
 
-    console.log(req.user);
+    // console.log(req.user);
     if (role !== "vendor") {
       return res.status(401).json({
         message:
